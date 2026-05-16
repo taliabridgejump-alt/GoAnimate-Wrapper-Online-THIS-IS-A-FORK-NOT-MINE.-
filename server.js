@@ -64,6 +64,10 @@ module.exports = http
 		try {
 			const parsedUrl = url.parse(req.url, true);
 			//if (!parsedUrl.path.endsWith('/')) parsedUrl.path += '/';
+			
+			// ⭐ Serve static files first
+if (serveStatic(req, res)) return;
+
 			const found = functions.find((f) => f(req, res, parsedUrl));
 			console.log(req.method, parsedUrl.path);
 			if (!found) {
