@@ -24,6 +24,39 @@ const tsv = require("./tts/voices");
 const tsl = require("./tts/load");
 const url = require("url");
 
+const fs = require("fs");
+const path = require("path");
+
+// ⭐ STATIC FILE HANDLER FOR FLASH
+function serveStatic(req, res) {
+    const folders = [
+        "swfs",
+        "themes",
+        "characters",
+        "goapi",
+        "assets",
+        "backgrounds",
+        "props",
+        "voices"
+    ];
+
+    for (const folder of folders) {
+        if (req.url.startsWith("/" + folder + "/")) {
+            const filePath = path.join(__dirname, req.url);
+            if (fs.existsSync(filePath)) {
+                // Flash SWF MIME type
+                if (req.url.endsWith(".swf")) {
+                    res.setHeader("Content-Type", "application/x-shockwave-flash");
+                }
+                fs.createReadStream(filePath).pipe(res);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
 const functions = [mvL, pmc, asl, chl, thl, thL, chs, cht, asL, tsl, chr, ast, mvm, mvl, mvs, mvt, tsv, asu, mvu, stp, stl];
 
 module.exports = http
